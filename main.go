@@ -24,7 +24,7 @@ func main() {
 		certmagic.DefaultACME.Email = "hugoblanc@fastmail.com"
 
 		log.Info("[PROD] Server is starting, wish me luck boys")
-		certmagic.HTTPS([]string{"freeboard.tech", "www.freeboard.tech"}, handlers.Handle())
+		certmagic.HTTPS([]string{"masker.freeboard.tech", "www.masker.freeboard.tech"}, handlers.Handle())
 
 	case false:
 		srv := &http.Server{
