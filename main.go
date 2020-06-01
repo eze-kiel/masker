@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/caddyserver/certmagic"
 	"github.com/eze-kiel/masker/handlers"
 )
@@ -22,7 +24,7 @@ func main() {
 		certmagic.DefaultACME.Email = "hugoblanc@fastmail.com"
 
 		log.Info("[PROD] Server is starting, wish me luck boys")
-		certmagic.HTTPS([]string{"freeboard.tech", "www.freeboard.tech"}, handlers.HandleFunc())
+		certmagic.HTTPS([]string{"freeboard.tech", "www.freeboard.tech"}, handlers.Handle())
 
 	case false:
 		srv := &http.Server{
