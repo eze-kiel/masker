@@ -1,7 +1,8 @@
 # masker
+Not online yet.
 
 A small web plateform designed to blur faces on pictures.
-Not online.
+The main goal of this plateform is to allow protests' photographers to share pictures of the events without exposing people to facial recognition programs.
 
 ## Classifiers
 
