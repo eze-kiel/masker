@@ -58,6 +58,8 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 // When "/" is hit with a post request, this function is called
 func uploadPage(w http.ResponseWriter, r *http.Request) {
+	authorizedMIME := []string{"image/bmp", "image/gif", "image/png", "image/jpeg", "image/jpg", "image/webp"}
+
 	// Try to parse data from post form
 	if err := r.ParseMultipartForm(maxUploadSize); err != nil {
 		fmt.Printf("Could not parse multipart form: %v\n", err)
@@ -95,7 +97,7 @@ func uploadPage(w http.ResponseWriter, r *http.Request) {
 		logrus.Errorf("File is too big %d instead of %d : %v\n", fileSize, maxUploadSize, err)
 		uploadState := Transaction{
 			Error:        true,
-			ErrorMessage: "File is too big (> 5Mo).",
+			ErrorMessage: "File is too big (> 15Mo).",
 		}
 
 		// Parse templates to display file's id
@@ -120,6 +122,35 @@ func uploadPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	detectedFileType := http.DetectContentType(fileBytes)
+
+	cont := false
+
+	for _, MIMEType := range authorizedMIME {
+		if MIMEType == detectedFileType {
+			cont = true
+		}
+	}
+
+	if !cont {
+		logrus.Errorf("File is not a picture : %s\n", detectedFileType)
+		uploadState := Transaction{
+			Error:        true,
+			ErrorMessage: "File is not a picture.",
+		}
+
+		// Parse templates to display file's id
+		tmpl, err := template.ParseFiles("views/home.html")
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = tmpl.Execute(w, uploadState)
+		if err != nil {
+			log.Fatalf("Can not execute templates for donwload page : %v", err)
+		}
+		return
+	}
 
 	// Create a new name based on a random token
 	// should use UUID in production
